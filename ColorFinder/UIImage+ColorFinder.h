@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImage (ColorFinder)
-- (void)getDominantColorWithCompletionHandler:(void (^)(UIColor*))completion;
+- (void)getDominantColorInRect:(CGRect)rect WithCompletionHandler:(void (^)(UIColor* dominantColor))completion;
 @end

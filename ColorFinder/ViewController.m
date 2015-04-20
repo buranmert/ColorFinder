@@ -19,6 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+//    [self.sourceImageView setImage:[UIImage imageNamed:@"balloons"]];
+//    [self.sourceImageView setImage:[UIImage imageNamed:@"messi"]];
     [self.sourceImageView setImage:[UIImage imageNamed:@"orchard"]];
 }
 
@@ -30,7 +32,7 @@
 - (void)getDominantColor {
     NSDate *start = [NSDate date];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        [self.sourceImageView.image getDominantColorWithCompletionHandler:^(UIColor *dominantColor) {
+        [self.sourceImageView.image getDominantColorInRect:CGRectZero WithCompletionHandler:^(UIColor *dominantColor) {
             [self.resultView setBackgroundColor:dominantColor];
             NSDate *end = [NSDate date];
             NSTimeInterval duration = [end timeIntervalSinceDate:start];

@@ -22,10 +22,10 @@ static const CGFloat CFInversePrecisionFactor = 16;
 
 - (CGFloat)getDistanceToPoint:(CFPoint *)otherPoint {
     CGFloat distance = 0.f;
-    distance += fabsf(self.red - otherPoint.red);
-    distance += fabsf(self.green - otherPoint.green);
-    distance += fabsf(self.blue - otherPoint.blue);
-    distance += fabsf(self.alpha - otherPoint.alpha);
+    distance += fabs(self.red - otherPoint.red);
+    distance += fabs(self.green - otherPoint.green);
+    distance += fabs(self.blue - otherPoint.blue);
+    distance += fabs(self.alpha - otherPoint.alpha);
     return distance;
 }
 
@@ -77,7 +77,7 @@ static const CGFloat CFInversePrecisionFactor = 16;
 
 @implementation UIImage (ColorFinder)
 
-- (void)getDominantColorWithCompletionHandler:(void (^)(UIColor* dominantColor))completion {
+- (void)getDominantColorInRect:(CGRect)rect WithCompletionHandler:(void (^)(UIColor* dominantColor))completion {
     // First get the image into your data buffer
     
     CGImageRef imageRef = [self CGImage];
@@ -106,15 +106,24 @@ static const CGFloat CFInversePrecisionFactor = 16;
         point.blue  = rawData[byteIndex+2] * 1.f;
         point.alpha = rawData[byteIndex+3] * 1.f;
         
-        BOOL isAdded = NO;
-        for (CFCluster *cluster in clusterArray) {
-            if ([cluster.center getDistanceToPoint:point] < CFColorThreshold) {
-                [cluster addPoint:point];
-                isAdded = YES;
-                break;
+//        if (point.red < 180.f && point.green < 120.f && point.blue < 120.f) {
+//            continue;
+//        }
+        
+        __block NSInteger clusterIndex = -1;
+        __block CGFloat closestDistance = CGFLOAT_MAX;
+        [clusterArray enumerateObjectsUsingBlock:^(CFCluster *cluster, NSUInteger idx, BOOL *stop) {
+            CGFloat distance = [cluster.center getDistanceToPoint:point];
+            if (distance < CFColorThreshold && distance < closestDistance) {
+                closestDistance = distance;
+                clusterIndex = idx;
             }
+        }];
+        
+        if (clusterIndex >= 0) {
+            [((CFCluster *)[clusterArray objectAtIndex:clusterIndex]) addPoint:point];
         }
-        if (isAdded == NO) {
+        else {
             CFCluster *newCluster = [[CFCluster alloc] initWithPoint:point];
             [clusterArray addObject:newCluster];
         }

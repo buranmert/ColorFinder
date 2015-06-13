@@ -1,3 +1,4 @@
 language: objective-c
 xcode_project: ColorFinder.xcodeproj
 xcode_scheme: ColorFinder-Travis
+xcode_sdk: iphonesimulator8.1

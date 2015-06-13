@@ -1,5 +1,5 @@
 # ColorFinder
-##### Dominant color finder on UIImage
+##### Dominant color finder on UIImage on iOS
 It does clustering on the image. It varies but usually takes between 0.05 sec and 0.1 sec
 
 (This repo is already an example for this category but, again:)
